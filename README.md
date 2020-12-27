@@ -17,5 +17,16 @@ Project inspired by [node js project ideas for beginners][1].
 >
 >If you’d like to look at how I was doing user registration, login, and authentication in our NodeJS Course.
 
+## Feature
+
+- register
+- login
+
+## Technology Stack
+
+- JWT
+- MongoDB
+- Docker
+
 
 [1]: https://www.blog.duomly.com/node-js-project-ideas-for-beginners/
