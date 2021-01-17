@@ -28,5 +28,17 @@ Project inspired by [node js project ideas for beginners][1].
 - MongoDB
 - Docker
 
+## Install
+
+```
+npm install
+```
+
+## Run
+
+```
+docker-compose up
+```
+
 
 [1]: https://www.blog.duomly.com/node-js-project-ideas-for-beginners/
