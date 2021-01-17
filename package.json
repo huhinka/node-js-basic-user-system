@@ -1,17 +1,13 @@
 {
   "name": "js-basic-user-system",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "type": "module",
-  "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www.js"
   },
-  "keywords": [
-    "node"
-  ],
-  "author": "",
+  "author": "huhinka",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^7.16.0",
@@ -21,6 +17,10 @@
     "eslint-plugin-promise": "^4.2.1"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "morgan": "~1.9.1"
   }
 }
