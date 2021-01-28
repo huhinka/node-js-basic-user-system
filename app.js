@@ -4,7 +4,8 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 
 import indexRouter from './routes/index.js'
-import usersRouter from './routes/users.js'
+import userRouter from './routes/user.js'
+import tokenRouter from './routes/token.js'
 
 const { json, urlencoded, static: expressStatic } = express
 const app = express()
@@ -16,6 +17,7 @@ app.use(cookieParser())
 app.use(expressStatic(path.join(path.resolve(), 'public')))
 
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/users', userRouter)
+app.use('/tokens', tokenRouter)
 
 export default app
