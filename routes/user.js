@@ -1,5 +1,9 @@
 import { Router } from 'express'
+import crypto from 'crypto'
+
 import jwt from './jwt.js'
+import UserModel from './user.model.js'
+
 const router = Router()
 
 /**
@@ -8,14 +12,49 @@ const router = Router()
  * Protected by JWT Auth.
  */
 router.get('/', jwt, (req, res) => {
-  res.send('respond with a resource')
+  if (!req.user.admin) {
+    return res.sendStatus(401)
+  } else {
+    const query = UserModel.find({})
+
+    query.exec((err, users) => {
+      if (err) {
+        res.sendStatus(400).send(err)
+      } else {
+        res.json(users)
+      }
+    })
+  }
 })
 
 /**
  * POST a user
  */
 router.post('/', (req, res) => {
-  // TODO
+  const password = req.body.password
+  const hash = crypto.createHash('md5').update(password).digest('hex')
+  const newUser = new UserModel({ name: req.body.name, password: hash })
+
+  UserModel.find({ name: req.body.name }).exec((err, users) => {
+    if (err) {
+      res.send(400).send(err)
+    } else {
+      if (users.length !== 0) {
+        res.send(400).send(`User ${req.body.name} exists.`)
+      } else {
+        newUser.save((err, user) => {
+          if (err) {
+            res.send(400).send(err)
+          } else {
+            res.json({
+              msg: 'User successfully added!',
+              user
+            })
+          }
+        })
+      }
+    }
+  })
 })
 
 export default router

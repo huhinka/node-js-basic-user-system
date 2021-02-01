@@ -1,7 +1,7 @@
 import jwt from 'express-jwt'
+import config from '../config.js'
 
 export default jwt({
   algorithms: ['HS256'],
-  // TODO put it into configuration
-  secret: 'shhhhhhhared-secret'
+  secret: config.publicKey
 })
