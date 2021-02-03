@@ -4,17 +4,19 @@ import crypto from 'crypto'
 
 import config from '../config.js'
 import userModel from './user.model.js'
+import { BadRequestError } from '../error.js'
+
 const router = Router()
 
 /**
  * POST a access token and return it.
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res, next) => {
   const name = req.body.name
   const password = req.body.password
 
   try {
-    const user = findUser(name, password)
+    const user = await findUser(name, password)
 
     const payload = {
       name: user.name,
@@ -26,29 +28,25 @@ router.post('/', (req, res) => {
 
     res.send({ token })
   } catch (err) {
-    res.sendStatus(400).send(err)
+    next(err)
   }
 })
 
-function findUser (name, password) {
-  userModel.find({ name: name }).exec((err, users) => {
-    if (err) {
-      throw Error(err)
-    } else {
-      if (users.length !== 1) {
-        throw Error(`User ${name} not exists or password is invalid.`)
-      } else {
-        const hash = crypto.createHash('md5').update(password).digest('hex')
-        const user = users[0]
+async function findUser (name, password) {
+  const users = await userModel.find({ name: name }).exec()
 
-        if (user.password !== hash) {
-          throw Error(`User ${name} not exists or password is invalid.`)
-        } else {
-          return user
-        }
-      }
+  if (users.length === 1) {
+    const hash = crypto.createHash('md5').update(password).digest('hex')
+    const user = users[0]
+
+    if (user.password !== hash) {
+      throw new BadRequestError(`User ${name} not exists or password is invalid.`)
+    } else {
+      return user
     }
-  })
+  } else {
+    throw new BadRequestError(`User ${name} not exists or password is invalid.`)
+  }
 }
 
 export default router

@@ -8,6 +8,7 @@ import indexRouter from './routes/index.js'
 import userRouter from './routes/user.js'
 import tokenRouter from './routes/token.js'
 import config from './config.js'
+import { handleErrors } from './error.js'
 
 function connectWithRetry () {
   return mongoose.connect(config.mongodbHost, (error) => {
@@ -34,5 +35,7 @@ app.use(expressStatic(path.join(path.resolve(), 'public')))
 app.use('/', indexRouter)
 app.use('/users', userRouter)
 app.use('/tokens', tokenRouter)
+
+app.use(handleErrors)
 
 export default app
