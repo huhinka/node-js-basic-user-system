@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import convertPassword from './user.util.js'
 
 const Schema = mongoose.Schema
 
@@ -13,6 +14,11 @@ const UserSchema = new Schema(
       type: String,
       required: true
     },
+    admin: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     createdAt: {
       type: Date,
       default: Date.now
@@ -22,5 +28,10 @@ const UserSchema = new Schema(
     versionKey: false
   }
 )
+
+UserSchema.pre('save', function (next) {
+  this.password = convertPassword(this.password)
+  next()
+})
 
 export default mongoose.model('user', UserSchema)

@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import crypto from 'crypto'
 
 import jwt from './jwt.js'
 import UserModel from './user.model.js'
@@ -31,9 +30,10 @@ router.get('/', jwt, (req, res) => {
  * POST a user
  */
 router.post('/', (req, res) => {
-  const password = req.body.password
-  const hash = crypto.createHash('md5').update(password).digest('hex')
-  const newUser = new UserModel({ name: req.body.name, password: hash })
+  const newUser = new UserModel({
+    name: req.body.name,
+    password: req.body.password
+  })
 
   UserModel.find({ name: req.body.name }).exec((err, users) => {
     if (err) {

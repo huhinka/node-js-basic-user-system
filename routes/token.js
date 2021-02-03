@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
 
 import config from '../config.js'
 import userModel from './user.model.js'
 import { BadRequestError } from '../error.js'
+import convertPassword from './user.util.js'
 
 const router = Router()
 
@@ -36,7 +36,7 @@ async function findUser (name, password) {
   const users = await userModel.find({ name: name }).exec()
 
   if (users.length === 1) {
-    const hash = crypto.createHash('md5').update(password).digest('hex')
+    const hash = convertPassword(password)
     const user = users[0]
 
     if (user.password !== hash) {
